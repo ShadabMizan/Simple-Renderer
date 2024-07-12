@@ -19,3 +19,14 @@ protected:
 private:
     std::ifstream _inFile;
 };
+
+class Cube : public SceneObject
+{
+public:
+    Cube(std::string name);
+    
+    void setColour(uint8_t index, Colour colour);
+    Colour getColour(uint8_t index);
+private:
+
+};

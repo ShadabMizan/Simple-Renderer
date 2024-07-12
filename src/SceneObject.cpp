@@ -6,7 +6,6 @@
 
 const std::string OBJ_FILE = "../data/blocks.obj";
 
-
 SceneObject::SceneObject(std::string name) : _name{name}
 {
     // Verify the object exists in the file path name
@@ -68,4 +67,16 @@ void SceneObject::print()
         std::cout << vertex << std::endl;
     }
     std::cout << std::endl << std::endl;
+}
+
+Cube::Cube(std::string name) : SceneObject(name) {}
+
+void Cube::setColour(uint8_t index, Colour colour)
+{
+    _vertices[index].setColour(colour);
+}
+
+Colour Cube::getColour(uint8_t index) 
+{
+    return _vertices[index].getColour();
 }

@@ -11,4 +11,7 @@ Vertex::Vertex(Vec3f point) : Vec3f(point), _colour{Colour()} {}
 Vertex::Vertex(Vec3f point, Colour colour) : Vec3f(point), _colour{colour} {}
 
 void Vertex::setColour(Colour colour) { _colour = colour; }
+Colour Vertex::getColour() { return _colour; }
+
+
 
