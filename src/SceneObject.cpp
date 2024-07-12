@@ -53,6 +53,7 @@ SceneObject::SceneObject(std::string name) : _name{name}
                 // Found vertex data
                 float x, y, z;
                 iss >> x >> y >> z;
+                
                 _vertices.emplace_back(x,y,z);
             }
         }
@@ -62,7 +63,7 @@ SceneObject::SceneObject(std::string name) : _name{name}
 void SceneObject::print()
 {
     std::cout << _name << ":" << std::endl;
-    for (const Vec3f& vertex : _vertices)
+    for (const Vertex& vertex : _vertices)
     {
         std::cout << vertex << std::endl;
     }

@@ -10,4 +10,5 @@ add_executable(blocks
     src/main.cpp
     src/SceneObject.cpp
     src/Camera.cpp
+    src/Vertex.cpp
     )

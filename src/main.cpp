@@ -4,7 +4,7 @@
 
 int main(int argc, char const *argv[])
 {
-    SceneObject cube("Block_1");
+    SceneObject cube{"Block_1"};
     cube.print();
 
     return 0;
