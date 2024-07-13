@@ -4,8 +4,8 @@
 
 int main(int argc, char const *argv[])
 {
-    SceneObject cube{"Block_1"};
-    cube.print();
+    Cube block1{"Block_1"};
 
+    std::cout << block1;
     return 0;
 }

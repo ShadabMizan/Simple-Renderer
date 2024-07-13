@@ -59,17 +59,30 @@ SceneObject::SceneObject(std::string name) : _name{name}
     }
 }
 
-void SceneObject::print()
-{
-    std::cout << _name << ":" << std::endl;
+
+// Cube with all vertices set to black
+Cube::Cube(std::string name) : SceneObject(name) { setColour(Colour()); }
+
+// Construct a cube with a Colour
+Cube::Cube(std::string name, Colour colour) : SceneObject(name) { setColour(colour); }
+
+// Overloaded print function
+void Cube::print(std::ostream& os) const
+{   
     for (const Vertex& vertex : _vertices)
     {
-        std::cout << vertex << std::endl;
+        os << "Vertex: " << vertex << "\t" << "Colour: " << vertex.getColour() << "\n";
     }
-    std::cout << std::endl << std::endl;
 }
 
-Cube::Cube(std::string name) : SceneObject(name) {}
+// Sets all vertices to the same colour
+void Cube::setColour(Colour colour)
+{
+    for (Vertex& vertex : _vertices)
+    {
+        vertex.setColour(colour);
+    }
+}
 
 void Cube::setColour(uint8_t index, Colour colour)
 {
