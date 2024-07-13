@@ -131,7 +131,8 @@ public:
 
     friend std::ostream& operator << (std::ostream &s, const Vec3<T> &v)
     {
-        return s << '[' << v.x << ' ' << v.y << ' ' << v.z << ']';
+        s << std::fixed << std::setprecision(3);
+        return s << '(' << v.x << ", " << v.y << ", " << v.z << ')';
     }
     
     T x, y, z;
