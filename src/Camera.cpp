@@ -5,14 +5,14 @@
 Camera::Camera() : position{Vec3f()}, rotation{Vec3f()} {}
 Camera::Camera(Vec3f pos, Vec3f rot) : position{pos}, rotation{rot} {}
 
-void Camera::setFocalLength(float focalLength) {  if (focalLength > 0) { _focalLength = focalLength;} }
+void Camera::setFocalLength(float focalLength) {  if (focalLength > 0) { this->focalLength = focalLength;} }
 
 // Float casts for trig functions
 constexpr double PI = 3.14159;
 float cosf(float angle) { return (float)(cos(angle * PI/180)); }
 float sinf(float angle) { return (float)(sin(angle * PI/180)); }
 
-Matrix44f Camera::getCameraToWorld()
+const Matrix44f Camera::getCameraToWorld() const
 {
     float r = rotation.x;
     float s = rotation.y;
@@ -69,3 +69,5 @@ Matrix44f Camera::getCameraToWorld()
 
     return cameraToWorld;
 }
+
+const Matrix44f Camera::getWorldToCamera() const { return getCameraToWorld().inverse(); }
