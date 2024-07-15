@@ -6,13 +6,13 @@
 struct Colour
 {
     Colour();
-    Colour(int r, int g, int b);
+    Colour(unsigned char r, unsigned char g, unsigned char b);
 
     static const Colour RED;
     static const Colour GREEN;
     static const Colour BLUE;
 
-    int R, G, B;
+    unsigned char R, G, B;
 
     friend std::ostream& operator<<(std::ostream& os, const Colour& colour)
     {

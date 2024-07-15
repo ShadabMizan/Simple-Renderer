@@ -4,7 +4,7 @@
 Colour::Colour() : R{0}, G{0}, B{0} {}
 
 // Constructor for a desired Colour
-Colour::Colour(int red, int green, int blue) : R{red}, G{green}, B{blue} {}
+Colour::Colour(unsigned char red, unsigned char green, unsigned char blue) : R{red}, G{green}, B{blue} {}
 
 const Colour Colour::RED = Colour(255,0,0);
 const Colour Colour::GREEN = Colour(0, 255, 0);
