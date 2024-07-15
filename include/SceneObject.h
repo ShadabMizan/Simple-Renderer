@@ -5,6 +5,7 @@
 #include "Vertex.h"
 #include <vector>
 #include <iostream>
+#include <memory>
 
 class SceneObject
 {
@@ -20,12 +21,16 @@ public:
         return os;
     }
     
+    std::vector<std::vector< std::shared_ptr<Vertex> >> triangles;
+
 protected:
-    std::string _name;
-    std::vector<Vertex> _vertices;
+    // Shared pointers so that we can change the properties of every vertex from this one dimensional vector 
+    // to reflect in every triangle made from that vertex
+    std::vector<std::shared_ptr<Vertex>> vertices;
 
 private:
     std::ifstream _inFile;
+    std::string _name;
 };
 
 class Cube : public SceneObject
