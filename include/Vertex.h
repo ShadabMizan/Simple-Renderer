@@ -24,12 +24,15 @@ struct Colour
 class Vertex : public Vec3f
 {
 public:
+    Vertex();
     Vertex(float x, float y, float z);
     Vertex(Vec3f point);
     Vertex(Vec3f point, Colour colour);
 
     void setColour(Colour Colour);
     const Colour getColour() const;
+    
+     
 private:
     Colour _colour;
 };

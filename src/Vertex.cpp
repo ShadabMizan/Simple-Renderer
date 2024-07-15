@@ -10,6 +10,7 @@ const Colour Colour::RED = Colour(255,0,0);
 const Colour Colour::GREEN = Colour(0, 255, 0);
 const Colour Colour::BLUE = Colour(0, 0, 255);
 
+Vertex::Vertex() : Vec3f() {}
 Vertex::Vertex(float x, float y, float z) : Vec3f(x,y,z), _colour{Colour()} {}
 Vertex::Vertex(Vec3f point) : Vec3f(point), _colour{Colour()} {}
 Vertex::Vertex(Vec3f point, Colour colour) : Vec3f(point), _colour{colour} {}
