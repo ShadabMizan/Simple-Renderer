@@ -1,8 +1,11 @@
 #include "Camera.h"
 #include <cmath>
 
-Camera::Camera(float focalLength, float fAW, float fAH, float nCP, float fCP, Vec3f pos, Vec3f rot)
-    : _focalLength(focalLength), _filmApertureWidth(fAW), _filmApertureHeight(fAH), _nearClippingPlane(nCP), _farClippingPlane(fCP), position(pos), rotation(rot) {}
+
+Camera::Camera() : position{Vec3f()}, rotation{Vec3f()} {}
+Camera::Camera(Vec3f pos, Vec3f rot) : position{pos}, rotation{rot} {}
+
+void Camera::setFocalLength(float focalLength) {  if (focalLength > 0) { _focalLength = focalLength;} }
 
 // Float casts for trig functions
 constexpr double PI = 3.14159;

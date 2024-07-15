@@ -6,17 +6,21 @@
 class Camera
 {
 public:
-    Camera(float focalLength, float fAW, float fAH, float nCP, float fCP, Vec3f pos, Vec3f rot);    
+    Camera();
+    Camera(Vec3f pos, Vec3f rot);
+
+    void setFocalLength(float focalLength);
+    
     Matrix44f getCameraToWorld();
 
     Vec3f position;     // Position in world coordinates
     Vec3f rotation;     // Rotation ...
 private:
-    float _focalLength;         // Distance between the eye and the image plane
+    float _focalLength = 50;         // Distance between the eye and the image plane, in mm
 
-    float _filmApertureWidth;   // Used to determine the angle of view (AOV) and film gate aspect ratio
-    float _filmApertureHeight;  // ...
+    float _filmApertureWidth = 36;   // Used to determine the angle of view (AOV) and film gate aspect ratio, in mm
+    float _filmApertureHeight = 24;  // ... in mm
 
-    float _nearClippingPlane;   // Determines the minimum distance from the eye for objects to be rendered in the camera's view.
-    float _farClippingPlane;    // Determines the maximum distance ...
+    float _nearClippingPlane = 0.1;   // Determines the minimum distance from the eye for objects to be rendered in the camera's view. in m
+    float _farClippingPlane = 100;    // Determines the maximum distance ... in m
 };
