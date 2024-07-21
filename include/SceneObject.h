@@ -17,6 +17,8 @@ public:
     // Pure virtual function
     virtual void print(std::ostream& os) const = 0;
 
+    const std::string getName() const;
+
     friend std::ostream& operator<<(std::ostream& os, const SceneObject& sceneObj)
     {
         sceneObj.print(os);

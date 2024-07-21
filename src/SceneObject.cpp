@@ -104,6 +104,8 @@ SceneObject::SceneObject(const SceneObject& original) : _name{original._name}
     }
 }
 
+const std::string SceneObject::getName() const { return _name; }
+
 // Cube with all vertices set to black
 Cube::Cube(std::string name) : SceneObject(name) { setColour(Colour()); }
 
