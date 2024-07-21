@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
 
 const std::string OBJ_FILE = "../data/blocks.obj";
 
@@ -63,15 +64,43 @@ SceneObject::SceneObject(std::string name) : _name{name}
                 // take the integer part, and discard the rest of the string to move on.
                 iss >> v1 >> temp >> v2 >> temp >> v3 >> temp;
 
-                // Subtract one to account for 0-indexing
-                v1--;
-                v2--;
-                v3--;
+                // Subtract one to account for 0-indexing. Then modulus 8 to account for faces from previous cubes stacking.
+                // Modulus 8 is a temporary fix since it assumes all objects in the scene have 8 vertices.
+                v1--; v1 %= 8;
+                v2--; v2 %= 8;
+                v3--; v3 %= 8;
 
-                std::vector tri = {vertices[v1], vertices[v2], vertices[v3]};
+                std::vector<std::shared_ptr<Vertex>> tri = {vertices[v1], vertices[v2], vertices[v3]};
                 triangles.push_back(tri);
             }
         }
+    }
+}
+
+// Scene Object Copy constructor
+SceneObject::SceneObject(const SceneObject& original) : _name{original._name}
+{
+    // Map original vertices to their new ones in a different location in the heap
+    std::unordered_map<Vertex*, std::shared_ptr<Vertex>> vertexMap;
+
+    // Deep copy every vertex in the original object into the new one.
+    for (const auto& vertex : original.vertices)
+    {
+        std::shared_ptr newVertex = std::make_shared<Vertex>(*vertex);
+        this->vertices.push_back(newVertex);
+        vertexMap[vertex.get()] = newVertex;
+    }
+
+    // Now parse triangle. Map old addresses to their new locations.
+    for (const auto& triangle : original.triangles)
+    {
+        std::vector<std::shared_ptr<Vertex>> newTriangle;
+
+        // Add the new addresses of the Vertex to the newTriangle
+        for (const auto& vertex : triangle) { newTriangle.push_back(vertexMap[vertex.get()]); }
+
+        // Add the new triangle to this object's triangles vector
+        this->triangles.push_back(newTriangle);
     }
 }
 
@@ -81,6 +110,7 @@ Cube::Cube(std::string name) : SceneObject(name) { setColour(Colour()); }
 // Construct a cube with a Colour
 Cube::Cube(std::string name, Colour colour) : SceneObject(name) { setColour(colour); }
 
+Cube::Cube(const Cube& original) : SceneObject(original) {}
 // Overloaded print function
 void Cube::print(std::ostream& os) const
 {   

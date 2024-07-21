@@ -12,6 +12,8 @@ class SceneObject
 public:
     SceneObject(std::string name);
 
+    SceneObject(const SceneObject& other);
+
     // Pure virtual function
     virtual void print(std::ostream& os) const = 0;
 
@@ -38,6 +40,8 @@ class Cube : public SceneObject
 public:
     Cube(std::string name);
     Cube(std::string name, Colour colour);
+
+    Cube(const Cube& original);
     
     void print(std::ostream& os) const override;
 
