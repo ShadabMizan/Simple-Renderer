@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include "Camera.h"
 #include "SceneObject.h"
 
@@ -60,7 +61,12 @@ const uint32_t imageHeight = 480;
 int main(int argc, char const *argv[])
 {
     Camera camera{Vec3f(8.49, 15.41, 6.46), Vec3f(79, 0, 154.4)};
-    Cube block1{"Block_1", Colour::BLUE};
+
+    std::shared_ptr<Cube> block1 = std::make_shared<Cube>("Block_1", Colour::RED);
+    std::shared_ptr<Cube> block2 = std::make_shared<Cube>("Block_2", Colour::GREEN);
+    std::shared_ptr<Cube> block3 = std::make_shared<Cube>("Block_3", Colour::BLUE);
+
+    std::vector<std::shared_ptr<SceneObject>> scene{block1, block2, block3};
 
     // Compute screen coordinates for the image plane
     float t, b, l, r;
@@ -70,7 +76,7 @@ int main(int argc, char const *argv[])
     Colour* imgBuffer = new Colour[imageWidth * imageHeight];
     float* zBuffer = new float[imageWidth * imageHeight];
 
-    
+    // Iterate over every triangle
 
     delete [] imgBuffer;
     delete [] zBuffer;
