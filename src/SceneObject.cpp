@@ -118,7 +118,7 @@ void Cube::print(std::ostream& os) const
 {   
     for (const std::shared_ptr<Vertex> vertex : vertices)
     {
-        os << "Vertex: " << *vertex << "\t" << "Colour: " << vertex->getColour() << "\n";
+        os << "Vertex: " << *vertex << "\t" << "Colour: " << vertex->colour << "\n";
     }
 }
 
@@ -127,16 +127,16 @@ void Cube::setColour(Colour colour)
 {
     for (auto vertex : vertices)
     {
-        vertex->setColour(colour);
+        vertex->colour = colour;
     }
 }
 
 void Cube::setColour(uint8_t index, Colour colour)
 {
-    vertices[index]->setColour(colour);
+    vertices[index]->colour = colour;
 }
 
 Colour Cube::getColour(uint8_t index) 
 {
-    return vertices[index]->getColour();
+    return vertices[index]->colour;
 }
