@@ -30,6 +30,7 @@ public:
     Vertex(Vec3f point, Colour colour);
 
     void setColour(Colour Colour);
+    void zInterpolate();
     const Colour getColour() const;
     
      

@@ -18,5 +18,9 @@ Vertex::Vertex(Vec3f point, Colour colour) : Vec3f(point), _colour{colour} {}
 void Vertex::setColour(Colour colour) { _colour = colour; }
 const Colour Vertex::getColour() const { return _colour; }
 
-
-
+void Vertex::zInterpolate()
+{
+    _colour.R /= this->z;
+    _colour.G /= this->z;
+    _colour.B /= this->z;
+}
