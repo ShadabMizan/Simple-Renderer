@@ -57,7 +57,7 @@ void convertToRaster(
     pRaster.z = -pCamera.z;     // Opposite direction from camera's perspective
 
     // Set colour of the raster point as the same as the world coordinate's
-    pRaster.setColour(pWorld.getColour());
+    pRaster.colour = pWorld.colour;
 }
 
 // a, b, and c are the vertices of a triangle. We can find the determinant (or area of triangle) by using vectors ab and ac.
@@ -73,28 +73,24 @@ float edgeFunction(const Vec3f& v1, const Vec3f& v2, const Vec3f& pixel)
 
 
 // Matches the 1.5 aspect ratio of the film aperture of the default camera.
-const uint32_t imageWidth = 720;
+const uint32_t imageWidth = 640;
 const uint32_t imageHeight = 480;
 
 int main(int argc, char const *argv[])
 {
-    Camera camera{Vec3f(8.53, 23.35, 3.25), Vec3f(90, 0, 161)};
+    Camera camera{Vec3f(-12.95, -14.12, 5.12), Vec3f(83 + 180, 0, -42.6)};
     
     std::shared_ptr<Cube> block1 = std::make_shared<Cube>("Block_1", Colour::RED);
-    // std::shared_ptr<Cube> block2 = std::make_shared<Cube>("Block_2", Colour::GREEN);
-    // std::shared_ptr<Cube> block3 = std::make_shared<Cube>("Block_3", Colour::BLUE);
-    std::vector<std::shared_ptr<SceneObject>> scene{block1};
+    std::shared_ptr<Cube> block2 = std::make_shared<Cube>("Block_2", Colour::GREEN);
+    std::shared_ptr<Cube> block3 = std::make_shared<Cube>("Block_3", Colour::BLUE);
+    std::vector<std::shared_ptr<SceneObject>> scene{block2, block3, block1};
 
     // Compute screen coordinates for the image plane
     float t, b, l, r;
     computeScreenCoordinates(camera, t, b, l, r);
 
-    // Colour buffer, which stores the colour data of all the pixels in the image
-    // Colour* colourBuffer = new Colour[imageWidth * imageHeight];
-    // for (int i{0}; i < imageWidth * imageHeight; ++i) { colourBuffer[i] = Colour(); }
-
-    unsigned char* frameBuffer = new unsigned char[imageWidth * imageHeight * 3];
-    for (int i{0}; i < imageWidth * imageHeight * 3; i++) { frameBuffer[i] = 255; }
+    Colour *frameBuffer = new Colour[imageWidth * imageHeight];
+    for (int i{0}; i < imageWidth * imageHeight; i++) { frameBuffer[i] = Colour(50); }
     
     float* zBuffer = new float[imageWidth * imageHeight];
     for (int i{0}; i < imageWidth * imageHeight; ++i) { zBuffer[i] = camera.farClippingPlane; }
@@ -105,9 +101,9 @@ int main(int argc, char const *argv[])
         for (int i{0}; i < sceneObj->triangles.size(); ++i)
         {
             // Three vertices of the triangle, in world coordinates.
-            const Vertex v0 = *(sceneObj->triangles[i][0]);
-            const Vertex v1 = *(sceneObj->triangles[i][1]);
-            const Vertex v2 = *(sceneObj->triangles[i][2]);
+            const Vertex& v0 = *(sceneObj->triangles[i][0]);
+            const Vertex& v1 = *(sceneObj->triangles[i][1]);
+            const Vertex& v2 = *(sceneObj->triangles[i][2]);
 
             // Convert to raster coords.
             Vertex v0Raster, v1Raster, v2Raster;
@@ -130,7 +126,8 @@ int main(int argc, char const *argv[])
             uint32_t y0 = std::max(int32_t(0), (int32_t)(std::floor(ymin)));
             uint32_t y1 = std::min(int32_t(imageHeight) - 1, (int32_t)(std::floor(ymax)));
 
-            float area = abs(edgeFunction(v0Raster, v2Raster, v1Raster));
+            float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+
             // Iterate through the bounding box in the image buffer
             for (uint32_t y{y0}; y <= y1; y++)
             {
@@ -142,7 +139,7 @@ int main(int argc, char const *argv[])
                     // Check if it lies within our triangle using the determinant. Area will be positive if the triangle is within 
                     // w's represent the proportion of the effect of each vertex attirbute at a location in the triangle. Used for linear interpolation.
                     float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
-                    float w1 = edgeFunction(v0Raster, v2Raster, pixelSample);    
+                    float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);    
                     float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);    
 
                     if (w0 >= 0 && w1 >= 0 && w2 >= 0)
@@ -153,11 +150,6 @@ int main(int argc, char const *argv[])
                         w0 /= area;
                         w1 /= area;
                         w2 /= area;
-
-                        // Z interpolation for colour attribute
-                        // v0Raster.zInterpolate();
-                        // v1Raster.zInterpolate();
-                        // v2Raster.zInterpolate();
 
                         // Z coordinate interpolation
                         float oneOverZ = (1/v0Raster.z) * w0 + (1/v1Raster.z) * w1 + (1/v2Raster.z) * w2;
@@ -171,10 +163,10 @@ int main(int argc, char const *argv[])
 
                             // Update the image buffer with attributes
 
-                            // Get colour of the point
-                            float r = w0 * v0Raster.getColour().R + w1 * v1Raster.getColour().R + w2 * v2Raster.getColour().R;
-                            float g = w0 * v0Raster.getColour().G + w1 * v1Raster.getColour().G + w2 * v2Raster.getColour().G;
-                            float b = w0 * v0Raster.getColour().B + w1 * v1Raster.getColour().B + w2 * v2Raster.getColour().B;
+                            // Get colour of the point. Remember, xyz is being used as rgb.
+                            float r = w0 * v0Raster.colour.x + w1 * v1Raster.colour.x + w2 * v2Raster.colour.x;
+                            float g = w0 * v0Raster.colour.y + w1 * v1Raster.colour.y + w2 * v2Raster.colour.y;
+                            float b = w0 * v0Raster.colour.z + w1 * v1Raster.colour.z + w2 * v2Raster.colour.z;
 
                             // Perspective correct colour interpolation
                             // r *= z;
@@ -182,14 +174,14 @@ int main(int argc, char const *argv[])
                             // b *= z;
 
                             // Bind between 0 and 255
-                            r = std::max(std::min((int32_t)r, 255), 0);
-                            g = std::max(std::min((int32_t)g, 255), 0);
-                            b = std::max(std::min((int32_t)b, 255), 0);
+                            // r = std::max(std::min((int32_t)r, 255), 0);
+                            // g = std::max(std::min((int32_t)g, 255), 0);
+                            // b = std::max(std::min((int32_t)b, 255), 0);
 
 
-                            frameBuffer[3 * (y*imageWidth + x)] = (unsigned char)(r);
-                            frameBuffer[3 * (y*imageWidth + x) + 1] = (unsigned char)(g);
-                            frameBuffer[3 * (y*imageWidth + x) + 2] = (unsigned char)(b);
+                            frameBuffer[y*imageWidth + x - 1].x = (unsigned char)(r);
+                            frameBuffer[y*imageWidth + x - 1].y = (unsigned char)(g);
+                            frameBuffer[y*imageWidth + x - 1].z = (unsigned char)(b);
                         }                        
                     }
                 }
@@ -200,7 +192,7 @@ int main(int argc, char const *argv[])
     std::ofstream ofs;
     ofs.open("../output.ppm");
     ofs << "P6\n" << imageWidth << " " << imageHeight << "\n255\n";
-    ofs.write((char*)frameBuffer, imageWidth * imageHeight * 3);
+    ofs.write((char*)frameBuffer, imageWidth * imageHeight * 3);        // Consider writing the data "manually", i.e. not using binary output.
     ofs.close();
 
     delete [] frameBuffer;
