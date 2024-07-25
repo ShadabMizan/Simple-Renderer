@@ -8,9 +8,8 @@ Camera::Camera(Vec3f pos, Vec3f rot) : position{pos}, rotation{rot} {}
 void Camera::setFocalLength(float focalLength) {  if (focalLength > 0) { this->focalLength = focalLength;} }
 
 // Float casts for trig functions
-constexpr double PI = 3.14159;
-float cosf(float angle) { return (float)(cos(angle * PI/180)); }
-float sinf(float angle) { return (float)(sin(angle * PI/180)); }
+float cosf(float angle) { return (float)(cos(angle * M_PI/180)); }
+float sinf(float angle) { return (float)(sin(angle * M_PI/180)); }
 
 const Matrix44f Camera::getCameraToWorld() const
 {
